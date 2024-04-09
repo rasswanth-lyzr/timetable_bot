@@ -13,20 +13,6 @@ timeslot_input = st.text_area(
 04:45 PM - 05:45 PM'''
 )
 
-# students_input = st.text_area(
-#     "STUDENTS (10)",
-#     '''Samantha Hayes
-# Lucas Martinez
-# Isabella Wong
-# Ethan Johnson
-# Olivia Patel
-# Caleb Mitchell
-# Sophia Nguyen
-# Gabriel Anderson
-# Ava Khan
-# Noah Ramirez'''
-# )
-
 classrooms_input = st.text_area(
     "CLASSROOMS",
     '''Room 101
@@ -50,14 +36,6 @@ Art
 Music'''
 )
 
-# constraints_input = st.text_area(
-#     "CONSTRAINTS",
-#     '''Emily Thompson availability - 08:00 AM - 09:00 AM, 11:00 AM - 12:00 PM, 01:00 PM - 02:00 PM
-# Alexander Lee availability - 08:00 AM - 09:00 AM, 09:30 AM - 10:30 AM, 01:00 PM - 02:00 PM, 02:30 PM - 03:30 PM
-# Mia Rodriguez availability - 08:00 AM - 09:00 AM, 11:00 AM - 12:00 PM, 02:30 PM - 03:30 PM
-# Jacob Brown availability - 09:30 AM - 10:30 AM, 11:00 AM - 12:00 PM, 01:00 PM - 02:00 PM, 02:30 PM - 03:30 PM
-# Charlotte Kim availability - 08:00 AM - 09:00 AM, 09:30 AM - 10:30 AM, 01:00 PM - 02:00 PM, 02:30 PM - 03:30 PM'''
-# )
 
 constraints_input = st.text_area(
     "CONSTRAINTS",
@@ -86,11 +64,6 @@ if submit_inputs:
         my_file.write("\n \n")
         my_file.write(timeslot_input)
         my_file.write("\n \n")
-
-        # my_file.write("STUDENTS")
-        # my_file.write("\n \n")
-        # my_file.write(students_input)
-        # my_file.write("\n \n")
 
         my_file.write("CLASSROOMS")
         my_file.write("\n \n")
