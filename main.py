@@ -46,9 +46,9 @@ constraints_input = st.text_area(
 12. Same subjects cannot be assigned consecutively'''
 )
 
-@st.cache_data
-def generate_timetable():
-    generate_basic_timetable()
+# @st.cache_data
+# def generate_timetable():
+#     generate_basic_timetable()
 
 submit_inputs = st.button("Submit", type="primary")
 if submit_inputs:
@@ -69,7 +69,7 @@ if submit_inputs:
         my_file.write(constraints_input)
 
     # Call timetable generator
-    generate_timetable()
+    generate_basic_timetable()
 
     # Read and display from result file
     with open("example_result.txt", "r") as my_file:

@@ -24,6 +24,9 @@ timetable_memory = OpenAIMemory(
 )
 
 def generate_basic_timetable():
+    if os.path.exists("assistant_ids.json"):
+        os.remove("assistant_ids.json")
+
     timetable_agent = Agent(
         prompt_persona="You are an intelligent agent that can create efficient class timetables for a week in a simple, structured format. Do not assign more classes than required, assign free slots instead. Generate timetable for every day from Monday to Friday.",
         role="Timetable creator",

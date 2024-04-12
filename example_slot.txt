@@ -6,8 +6,6 @@ TIMESLOTS
 11:45 AM - 12:45 PM
 01:00 PM - 02:00 PM
 02:15 PM - 03:15 PM
-03:30 PM - 04:30 PM
-04:45 PM - 05:45 PM
  
 SUBJECTS
  
@@ -16,23 +14,13 @@ Science
 English
 Social Studies
 History
-Geography
-Physical Education
-Computer
-Art
-Music
  
 CONSTRAINTS
  
-1. Mathematics - 5 classes a week
+1. Mathematics - 2 classes a week
 2. Science - 5 classes a week
 3. English - 4 classes a week
 4. Social Studies - 4 classes a week
 5. History - 3 classes a week
-6. Geography - 3 classes a week
-7. Physical Education - 4 classes a week
-8. Computer - 5 classes a week
-9. Art - 2 class a week
-10. Music - 2 class a week
 11. Each classroom is allocated once per time slot on any given day.
 12. Same subjects cannot be assigned consecutively
