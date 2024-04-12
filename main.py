@@ -1,75 +1,78 @@
-from lyzr_automata.ai_models.openai import OpenAIModel
-from lyzr_automata.memory.open_ai import OpenAIMemory
-from lyzr_automata import Agent, Task
-from lyzr_automata.tasks.task_literals import InputType, OutputType
+import streamlit as st
+from lyzr_functions import generate_basic_timetable
 
-from dotenv import load_dotenv
-import os
-
-load_dotenv()
-
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-
-open_ai_model_text = OpenAIModel(
-api_key=OPENAI_API_KEY,
-parameters={
-    "model": "gpt-4-turbo-preview",
-    "temperature": 0.3,
-    "max_tokens": 1500,
-    },
+# Time Slots
+timeslot_input = st.text_area(
+    "TIMESLOTS",
+    '''08:00 AM - 09:00 AM
+09:15 AM - 10:15 AM
+10:30 AM - 11:30 AM
+11:45 AM - 12:45 PM
+01:00 PM - 02:00 PM
+02:15 PM - 03:15 PM
+03:30 PM - 04:30 PM
+04:45 PM - 05:45 PM'''
 )
 
-timetable_memory = OpenAIMemory(
-    file_path='example_slot.txt'
+# Subjects
+subjects_input = st.text_area(
+    "SUBJECTS",
+    '''Mathematics
+Science
+English
+Social Studies
+History
+Geography
+Physical Education
+Computer
+Art
+Music'''
 )
 
-def generate_basic_timetable(input_content = ""):
-    timetable_agent = Agent(
-        prompt_persona="You are an intelligent agent that can create efficient class timetables for a week in a simple, concise and easy to read format. Do not assign more classes than required. Assign free slots instead. Generate timetable for every day from Monday to Friday.",
-        role="Timetable creator",
-        memory=timetable_memory
-    )
+# Constraints
+constraints_input = st.text_area(
+    "CONSTRAINTS",
+    '''1. Mathematics - 5 classes a week
+2. Science - 5 classes a week
+3. English - 4 classes a week
+4. Social Studies - 4 classes a week
+5. History - 3 classes a week
+6. Geography - 3 classes a week
+7. Physical Education - 4 classes a week
+8. Computer - 5 classes a week
+9. Art - 2 class a week
+10. Music - 2 class a week
+11. Each classroom is allocated once per time slot on any given day.
+12. Same subjects cannot be assigned consecutively'''
+)
 
-    timetable_task = Task(
-        name="Timetable Creator",
-        agent=timetable_agent,
-        output_type=OutputType.TEXT,
-        input_type=InputType.TEXT,
-        model=open_ai_model_text,
-        instructions="Using the time slots, subject details and classrooms create a timetable that satisfies every constraint. Return only the timetable in a simple table format.",
-        log_output=True,
-        enhance_prompt=False,
-    ).execute()
+@st.cache_data
+def generate_timetable():
+    generate_basic_timetable()
 
-    # sample = "Based on the provided details, here is a proposed class timetable that satisfies all student and teacher availability constraints:\n\n**Monday to Friday**\n\n**08:00 AM to 08:50 AM**\n- Subject: Math\n- Teacher: Alexander Lee\n- Students: Samantha Hayes, Lucas Martinez, Isabella Wong, Olivia Patel, Sophia Nguyen, Ava Khan, Noah Ramirez\n\n**08:55 AM to 09:45 AM**\n- Subject: English\n- Teacher: Emily Thompson (can only take 08:55 AM to 09:45 AM class)\n- Students: Samantha Hayes, Lucas Martinez, Isabella Wong, Olivia Patel, Sophia Nguyen, Ava Khan, Noah Ramirez\n\n**09:50 AM to 10:40 AM**\n- Subject: Science\n- Teacher: Mia Rodriguez\n- Students: Samantha Hayes, Lucas Martinez, Isabella Wong, Olivia Patel, Sophia Nguyen, Ava Khan, Noah Ramirez\n\n**10:45 AM to 11:35 AM**\n- Subject: Computer Science\n- Teacher: Jacob Brown\n- Students: Gabriel Anderson (can only take 10:45 AM to 11:35 AM class), Samantha Hayes, Lucas Martinez, Isabella Wong, Olivia Patel, Sophia Nguyen, Ava Khan, Noah Ramirez\n\n**11:40 AM to 12:30 PM**\n- Subject: Art\n- Teacher: Charlotte Kim\n- Students: Samantha Hayes, Lucas Martinez, Isabella Wong, Olivia Patel, Sophia Nguyen, Ava Khan, Noah Ramirez\n\n**02:00 PM to 02:50 PM**\n- Subject: History\n- Teacher: Benjamin Harris\n- Students: Samantha Hayes, Lucas Martinez, Isabella Wong, Olivia Patel, Sophia Nguyen, Ava Khan, Noah Ramirez (Caleb Mitchell cannot take 02:00 PM to 02:50 PM class)\n\n**02:55 PM to 03:45 PM**\n- Subject: Geography\n- Teacher: Harper Jones\n- Students: Samantha Hayes, Lucas Martinez, Isabella Wong, Olivia Patel, Caleb Mitchell, Sophia Nguyen, Ava Khan, Noah Ramirez\n\n**03:50 PM to 04:40 PM**\n- Subject: Physical Education\n- Teacher: William Chang\n- Students: Samantha Hayes, Lucas Martinez, Isabella Wong, Olivia Patel, Caleb Mitchell, Sophia Nguyen, Ava Khan, Noah Ramirez\n\n**04:45 PM to 05:35 PM**\n- Subject: Music\n- Teacher: Evelyn Sullivan\n- Students: Ethan Johnson (can only take 04:45 PM to 05:35 PM class), Samantha Hayes, Lucas Martinez, Isabella Wong, Olivia Patel, Caleb Mitchell, Sophia Nguyen, Ava Khan, Noah Ramirez\n\n**05:40 PM to 06:30 PM**\n- Subject: Philosophy\n- Teacher: Daniel Garcia (cannot take 05:40 PM to 06:30 PM class, not assigned this slot)\n- Students: Samantha Hayes, Lucas Martinez, Isabella Wong, Olivia Patel, Caleb Mitchell, Sophia Nguyen, Ava Khan, Noah Ramirez\n\nPlease note that specific subjects assigned to time slots are hypothetical to accommodate the teacher and student availability provided. The missing subject for the last slot (05:40 PM to 06:30 PM) implies either a free period for students or a need for further adjustment based on staff availability beyond the provided constraints."
-
-    with open("example_result.txt", "w") as my_file:
-        my_file.write("GENERATED TIMETABLE")
+submit_inputs = st.button("Submit", type="primary")
+if submit_inputs:
+    # Save inputs to a file
+    with open("example_slot.txt", "w") as my_file:
+        my_file.write("TIMESLOTS")
         my_file.write("\n \n")
-        my_file.write(timetable_task)
-        my_file.write("\n")
-
-    timetable_checker_agent = Agent(
-        prompt_persona="You are an intelligent agent that can verify if a generated timetable fulfils all the constraints or not.",
-        role="Timetable checker",
-        memory=timetable_memory
-    )
-
-    timetable_checker_task = Task(
-        name="Timetable Checker",
-        agent=timetable_checker_agent,
-        output_type=OutputType.TEXT,
-        input_type=InputType.TEXT,
-        model=open_ai_model_text,
-        instructions="Verify that the generated timetable input fulfils the requirements mentioned in the file. If VALID, return <!VALID!> and the timetable in a table format; If INVALID, return <!INVALID!> the reason why invalid. Do not return anything else.",
-        log_output=True,
-        enhance_prompt=False,
-        previous_output=timetable_task
-    ).execute()
-
-    with open("example_result.txt", "a") as my_file:
+        my_file.write(timeslot_input)
         my_file.write("\n \n")
-        my_file.write("GENERATED VERIFICATION")
+
+        my_file.write("SUBJECTS")
         my_file.write("\n \n")
-        my_file.write(timetable_checker_task)
-        my_file.write("\n")
+        my_file.write(subjects_input)
+        my_file.write("\n \n")
+
+        my_file.write("CONSTRAINTS")
+        my_file.write("\n \n")
+        my_file.write(constraints_input)
+
+    # Call timetable generator
+    generate_timetable()
+
+    # Read and display from result file
+    with open("example_result.txt", "r") as my_file:
+        content = my_file.read()
+
+    st.write(content)
