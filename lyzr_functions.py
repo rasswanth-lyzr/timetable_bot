@@ -24,15 +24,18 @@ timetable_memory = OpenAIMemory(
 )
 
 def generate_basic_timetable():
+    # Remove file if exists
     if os.path.exists("assistant_ids.json"):
         os.remove("assistant_ids.json")
-
+    
+    # Timetable generator Agent
     timetable_agent = Agent(
         prompt_persona="You are an intelligent agent that can create efficient class timetables for a week in a simple, structured format. Do not assign more classes than required, assign free slots instead. Generate timetable for every day from Monday to Friday.",
         role="Timetable creator",
         memory=timetable_memory
     )
-
+    
+    # Timetable generator Task
     timetable_task = Task(
         name="Timetable Creator",
         agent=timetable_agent,
@@ -43,19 +46,22 @@ def generate_basic_timetable():
         log_output=True,
         enhance_prompt=False,
     ).execute()
-
+    
+    # Save output to a file
     with open("example_result.txt", "w") as my_file:
         my_file.write("# GENERATED TIMETABLE - Timetable Agent")
         my_file.write("\n \n")
         my_file.write(timetable_task)
         my_file.write("\n")
 
+    # Timetable verification Agent
     timetable_checker_agent = Agent(
         prompt_persona="You are an intelligent agent that can verify if a generated timetable fulfills all the constraints or not. Make sure all classes meet the exact requirements; not more, not less.",
         role="Timetable checker",
         memory=timetable_memory
     )
 
+    # Timetable verification Task
     timetable_checker_task = Task(
         name="Timetable Checker",
         agent=timetable_checker_agent,
@@ -67,7 +73,8 @@ def generate_basic_timetable():
         enhance_prompt=False,
         previous_output=timetable_task
     ).execute()
-
+  
+    # Save output to a file
     with open("example_result.txt", "a") as my_file:
         my_file.write("\n \n")
         my_file.write("# GENERATED VERIFICATION - Verification Agent")
